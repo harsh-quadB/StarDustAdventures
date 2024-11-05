@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes twinkle {
+  0% { opacity: 0.3; }
+  50% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
+/* Base container */
+.game-container {
+  @apply min-h-screen w-full bg-[#040B2C] relative font-['Press_Start_2P'] text-white overflow-hidden;
+}
+
+/* Background styling */
+.background-overlay {
+  @apply absolute inset-0 z-0;
+}
+
+.background-image {
+  @apply w-full h-full object-cover opacity-30;
+}
+
+/* Star animation */
+.star {
+  @apply absolute w-1 h-1 bg-[#4A90E2] rounded-sm;
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+/* Main content */
+.content-container {
+  @apply relative z-10 max-w-md mx-auto pt-8 px-6;
+}
+
+/* Header section */
+.header {
+  @apply text-center flex flex-row justify-between items-center mb-6;
+}
+
+.title-container {
+  @apply flex flex-col;
+}
+
+.game-title {
+  @apply text-2xl leading-relaxed;
+}
+
+/* .play-button {
+  @apply bg-[#B4177E] text-white px-8 py-2 rounded-lg text-sm hover:bg-[#931366] transition-colors uppercase;
+} */
+
+/* Main section */
+.main-section {
+  @apply rounded-lg p-6 space-y-8;
+}
+
+.section-header {
+  @apply space-y-2;
+}
+
+.section-title {
+  @apply text-xl flex justify-center items-center font-bold mb-3;
+}
+
+/* Planet and features layout */
+.features-container {
+  @apply flex flex-row;
+}
+
+.orange-planet {
+  @apply absolute mt-20 -left-[27%] rounded-full object-cover w-[250px] h-[250px];
+}
+
+.feature-list {
+  @apply space-y-4 ;
+}
+
+/* Individual features */
+.feature-tap-mine {
+  @apply ml-6 mb-4 ;
+}
+
+.feature-usp {
+  @apply ml-[115px];
+}
+
+.feature-stardust {
+  @apply ml-[123px];
+}
+
+.feature-upgrades {
+  @apply ml-16;
+}
+
+.feature-concept {
+  @apply ml-4;
+}
+
+/* Common feature styles */
+.feature-title {
+  @apply font-bold;
+}
+
+.feature-description {
+  @apply text-xs;
+}

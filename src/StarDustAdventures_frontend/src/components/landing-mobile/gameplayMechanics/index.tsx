@@ -7,45 +7,45 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-/**
- * Renders the header for gameplay mechanics.
- * @param {Object} props - Component props
- * @param {React.RefObject<HTMLDivElement>} props.headerRef - Ref for the header container
- */
 const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) => {
   return (
-    <div className='mob-gameplay-header' ref={headerRef}>
-      <h3 className='section-title'>Gameplay Mechanics</h3>
-      <p className='section-caption'>Explore the engaging system of Star Dust Adventures</p>
+    <div ref={headerRef} className="gameplay-header">
+      <h2 className="gameplay-title">Gameplay Mechanics</h2>
+      <p className="gameplay-caption">
+        Explore the engaging system of Star Dust Adventures
+      </p>
     </div>
   );
 };
 
-/**
- * Renders a list of gameplay mechanic cards.
- * @param {Object} props - Component props
- * @param {React.RefObject<HTMLDivElement>} props.cardsRef - Ref for the cards container
- */
 const CardList = ({ cardsRef }: { cardsRef: React.RefObject<HTMLDivElement> }) => {
   return (
-    <div className="gameplay-mechanics-cards-list" ref={cardsRef}>
+    <div ref={cardsRef} className="gameplay-cards-container">
       {CARDS.map((card, index) => (
-        <Card {...card} key={index} />
+        <Card
+          key={index}
+          title={card.title}
+          description={card.description}
+          image={card.image}
+          // className="mob-gameplay-card"
+        />
       ))}
     </div>
   );
 };
 
-/**
- * Renders the Gameplay Mechanics section with GSAP animations and ScrollTrigger.
- */
 const GameplayMechanics = () => {
   const headerRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (headerRef.current && containerRef.current && cardsRef.current) {
+    // Create context for cleanup
+    const ctx = gsap.context(() => {
+      if (!headerRef.current || !containerRef.current || !cardsRef.current) return;
+
+      const cards = cardsRef.current.querySelectorAll(".mob-gameplay-card");
+      
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
@@ -58,26 +58,52 @@ const GameplayMechanics = () => {
       });
 
       // Header animation
-      tl.fromTo(headerRef.current, { x: '100%', height: '100vh' }, { x: 0, height: 0, duration: 1 });
-
-      // Cards animation
-      const cards = cardsRef.current.querySelectorAll(".mob-gameplay-card");
-      tl.fromTo(cards, 
-        { opacity: 0.8, scale: 0.8 }, 
-        { xPercent: -100 * (cards.length - 1), ease: "none", opacity: 1, scale: 1 }
+      tl.fromTo(
+        headerRef.current, 
+        { 
+          x: '100%', 
+          height: '100vh',
+          opacity: 0 
+        }, 
+        { 
+          x: 0, 
+          height: 'auto',
+          opacity: 1,
+          duration: 1 
+        }
       );
 
-      return () => {
-        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      };
-    }
+      // Cards animation - make sure cards exist before animating
+      if (cards.length > 0) {
+        tl.fromTo(
+          cards,
+          { 
+            opacity: 0.8, 
+            scale: 0.8,
+            x: 0 
+          },
+          { 
+            x: `-${100 * (cards.length - 1)}%`,
+            ease: "none",
+            opacity: 1,
+            scale: 1,
+            stagger: 0.2
+          }
+        );
+      }
+    }, containerRef); // Scope GSAP to container
+
+    // Cleanup function
+    return () => {
+      ctx.revert(); // This will clean up all GSAP animations
+    };
   }, []);
 
   return (
-    <section className='mob-gameplay-container' ref={containerRef}>
+    <div ref={containerRef} className="gameplay-mechanics-container">
       <Header headerRef={headerRef} />
       <CardList cardsRef={cardsRef} />
-    </section>
+    </div>
   );
 };
 

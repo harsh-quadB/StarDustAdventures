@@ -10,3 +10,46 @@
 .gameplay-mechanics-cards-list{
     @apply mt-4 flex justify-between items-center w-[300vw]
 }
+
+.gameplay-mechanics-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  
+  .gameplay-header {
+    position: relative;
+    padding: 2rem 1rem;
+    text-align: center;
+    background: transparent;
+  }
+  
+  .gameplay-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .gameplay-caption {
+    font-size: 1rem;
+    opacity: 0.8;
+  }
+  
+  .gameplay-cards-container {
+    display: flex;
+    gap: 1rem;
+    padding: 2rem 1rem;
+    width: fit-content;
+  }
+  
+  .mob-gameplay-card {
+    min-width: 280px;
+    flex-shrink: 0;
+  }
+  
+  @media (max-width: 768px) {
+    .gameplay-cards-container {
+      overflow-x: hidden;
+      margin: 0 auto;
+    }
+  }
