@@ -18,22 +18,31 @@ const MobileGameplayView = lazy(() => import('../components/landing-mobile/gamep
  *
  * @returns {JSX.Element} The PatternCover component wrapped in a GradientCover with dynamic content.
  */
-const PatternCover = ()=> {
-  const [width, setWidth] = useState(window.innerWidth);
+const PatternCover = ({ width }) => {
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const handleResize = () => setWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 100);
 
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+    return () => clearTimeout(timer);
+  }, [width]);
+
+  if (isLoading) {
+    return (
+      <GradientCover>
+        <div>Loading...</div>
+      </GradientCover>
+    );
+  }
 
   return (
     <GradientCover>
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense fallback={<div>Loading...</div>}>
         {width > 768 ? <GamePlayMechanics /> : <MobileGameplayView />}
         {width > 768 ? <Lore /> : <LoreM />}
-      
       </Suspense>
     </GradientCover>
   );
@@ -45,21 +54,41 @@ const PatternCover = ()=> {
  *
  * @returns {JSX.Element} The complete landing page layout.
  */
-const Landing = ()=>{
+const Landing = () => {
   const [width, setWidth] = useState(window.innerWidth);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
-    const handleResize = () => setWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
+    let timeoutId;
+    
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      setIsTransitioning(true);  // Set transitioning state
+      
+      timeoutId = setTimeout(() => {
+        setWidth(window.innerWidth);
+        setIsTransitioning(false);  // Clear transitioning state after update
+      }, 150);  // Increased delay slightly
+    };
 
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(timeoutId);
+    };
   }, []);
+
+  // If transitioning, show a simple loading state or nothing
+  if (isTransitioning) {
+    return <div className="page loading">Loading...</div>;
+  }
 
   return (
     <div className="page">
       <Hero />
       {width > 1024 ? <GameConcept /> : <StarDustMobile />}
-      <PatternCover />
+      <PatternCover width={width} />  {/* Pass width as prop */}
       <Footer />
     </div>
   );
