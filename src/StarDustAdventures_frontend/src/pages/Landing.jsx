@@ -9,8 +9,10 @@ import GameConceptM from '../components/landing-mobile/gameConcept/GameConceptM'
 import LoreM from '../components/landing-mobile/lore/LoreM';
 import StarDustMobile from '../components/landing-mobile/star-mobile-landing/StarDustMobile'
 
-const GamePlayMechanics = lazy(() => import('../components/landing/gamePlayMechanics'));
-const MobileGameplayView = lazy(() => import('../components/landing-mobile/gameplayMechanics'));
+// const GamePlayMechanics = lazy(() => import('../components/landing/gamePlayMechanics'));
+// const MobileGameplayView = lazy(() => import('../components/landing-mobile/gameplayMechanics'));
+import GamePlayMechanics from '../components/landing/gamePlayMechanics';
+import MobileGameplayView from '../components/landing-mobile/gameplayMechanics'
 
 /**
  * PatternCover component dynamically renders gameplay mechanics based on screen width,
@@ -40,10 +42,10 @@ const PatternCover = ({ width }) => {
 
   return (
     <GradientCover>
-      <Suspense fallback={<div>Loading...</div>}>
+      
         {width > 768 ? <GamePlayMechanics /> : <MobileGameplayView />}
         {width > 768 ? <Lore /> : <LoreM />}
-      </Suspense>
+      
     </GradientCover>
   );
 };
@@ -56,38 +58,39 @@ const PatternCover = ({ width }) => {
  */
 const Landing = () => {
   const [width, setWidth] = useState(window.innerWidth);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  // const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
-    let timeoutId;
+    // let timeoutId;
     
     const handleResize = () => {
-      clearTimeout(timeoutId);
-      setIsTransitioning(true);  // Set transitioning state
+      setWidth(window.innerWidth);
+      // clearTimeout(timeoutId);
+      // setIsTransitioning(true);  // Set transitioning state
       
-      timeoutId = setTimeout(() => {
-        setWidth(window.innerWidth);
-        setIsTransitioning(false);  // Clear transitioning state after update
-      }, 150);  // Increased delay slightly
+      // timeoutId = setTimeout(() => {
+      //   setWidth(window.innerWidth);
+      //   setIsTransitioning(false);  // Clear transitioning state after update
+      // }, 150);  // Increased delay slightly
     };
 
     window.addEventListener('resize', handleResize);
     
     return () => {
       window.removeEventListener('resize', handleResize);
-      clearTimeout(timeoutId);
+      // clearTimeout(timeoutId);
     };
   }, []);
 
   // If transitioning, show a simple loading state or nothing
-  if (isTransitioning) {
-    return <div className="page loading">Loading...</div>;
-  }
+  // if (isTransitioning) {
+  //   return <div className="page loading">Loading...</div>;
+  // }
 
   return (
     <div className="page">
       <Hero />
-      {width > 1024 ? <GameConcept /> : <StarDustMobile />}
+      {width > 768 ? <GameConcept /> : <StarDustMobile />}
       <PatternCover width={width} />  {/* Pass width as prop */}
       <Footer />
     </div>
